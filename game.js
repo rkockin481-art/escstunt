@@ -90,12 +90,18 @@ async function loadPlayer() {
 
 function savePlayer() {
     localStorage.setItem('stunt_coins', Math.floor(coins));
+    
+    // Если текущая дистанция больше рекорда, обновляем рекорд
+    if (score > bestScore) {
+        bestScore = Math.floor(score);
+    }
     localStorage.setItem('stunt_best', Math.floor(bestScore));
     
     if (firebaseReady && playerTgId !== "offline_user") {
         db.ref('players/' + playerTgId).update({
             coins: Math.floor(coins),
-            best_score: Math.floor(bestScore)
+            best_score: Math.floor(bestScore),
+            last_distance: Math.floor(score) // Оставляем, чтобы видеть текущий заезд
         }).catch(e => console.warn("Не удалось сохранить в Firebase:", e));
     }
 }
@@ -148,7 +154,10 @@ window.addEventListener('pointerdown', (e) => {
     if (e.target.closest('.bottom-bar-container') || e.target.closest('.top-bar')) return;
     handle(true);
 });
-window.addEventListener('pointerup', () => handle(false));
+window.addEventListener('pointerup', () => { 
+    handle(false); 
+    savePlayer(); // Сохраняем при отпускании кнопки
+});
 window.addEventListener('pointercancel', () => handle(false));
 
 document.body.addEventListener('touchmove', (e) => {
@@ -424,25 +433,33 @@ function loop(t) {
 
             // НАЧИСЛЕНИЕ
             if (angle > 10) {
-                let speedFactor = (angle - 10) / 50 + 0.01; 
-                                // Уменьшаем скорость начисления в 5 раз (было просто * dt, стало / 5)
-                score += (speedFactor / 3) * dt;  
-                let progress = (angle - 10) / (CRASH - 10); 
-                let rewardPerSecond = 50 + (150 * progress); 
+                let speedFactor = (angle - 10) / 50 + 0.01;
+                score += (speedFactor / 3) * dt;
+                let progress = (angle - 10) / (CRASH - 10);
+                let rewardPerSecond = 50 + (150 * progress);
                 coins += (rewardPerSecond / 60) * dt;
 
                 if (!window.lastMoneyTextTime) window.lastMoneyTextTime = 0;
-                if (t - window.lastMoneyTextTime > 400) { 
+                if (t - window.lastMoneyTextTime > 400) {
                     window.lastMoneyTextTime = t;
-                    let amt = Math.floor(rewardPerSecond / 2.5); 
-                    moneyTexts.push({ 
-                        x: canvas.width / 2 + (Math.random() - 0.5) * 60, 
+                    let amt = Math.floor(rewardPerSecond / 2.5);
+                    moneyTexts.push({
+                        x: canvas.width / 2 + (Math.random() - 0.5) * 60,
                         y: 330 + (Math.random() - 0.5) * 40,
-                        txt: `+${amt} ₽`, a: 1, c: progress > 0.6 ? '#4ade80' : '#facc15', v: Math.random() * 0.5 + 0.5 
+                        txt: `+${amt} ₽`, a: 1, c: progress > 0.6 ? '#4ade80' : '#facc15', v: Math.random() * 0.5 + 0.5
                     });
                 }
+
+                // --- ДОБАВЬ ЭТО СЮДА ---
+                if (!window.lastStuntSave) window.lastStuntSave = 0;
+                if (t - window.lastStuntSave > 1000) {
+                    window.lastStuntSave = t;
+                    savePlayer();
+                }
+                // -----------------------
+                
             } else {
-                score = 0; 
+                score = 0;
             }
         }
 
