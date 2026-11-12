@@ -89,15 +89,13 @@ async function loadPlayer() {
 }
 
 function savePlayer() {
-    // Сохраняем в память телефона
     localStorage.setItem('stunt_coins', Math.floor(coins));
     localStorage.setItem('stunt_best', Math.floor(bestScore));
     
     if (firebaseReady && playerTgId !== "offline_user") {
         db.ref('players/' + playerTgId).update({
             coins: Math.floor(coins),
-            best_score: Math.floor(bestScore),
-            last_distance: Math.floor(score) // <--- ДОБАВЛЯЕМ ДИСТАНЦИЮ
+            best_score: Math.floor(bestScore)
         }).catch(e => console.warn("Не удалось сохранить в Firebase:", e));
     }
 }
@@ -411,7 +409,7 @@ function loop(t) {
             if (angle >= CRASH) { 
                 isGameOver = true; isPressing = false; 
                 if (score > bestScore) bestScore = Math.floor(score);
-                savePlayer(); // Сохраняем при краше
+                savePlayer(); // <--- ДОЛЖНО БЫТЬ ТУТ
                 document.getElementById('game-over-screen').style.display = 'flex'; 
                 document.getElementById('final-score').innerText = Math.floor(score); 
             }
