@@ -23,22 +23,16 @@ try {
 // --- 2. TELEGRAM ---
 let playerTgId = "offline_user";
 let playerUsername = "Гонщик";
-
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.ready();
     tg.expand();
     if (tg.requestFullscreen) tg.requestFullscreen();
-    
-    // ВЫВОДИМ ВСЁ, ЧТО ПРИХОДИТ ОТ ТЕЛЕГРАМА
-    alert("initData: " + tg.initData + "\n\nUser: " + JSON.stringify(tg.initDataUnsafe?.user));
-    
     if (tg.initDataUnsafe?.user) {
         playerTgId = tg.initDataUnsafe.user.id.toString();
         playerUsername = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Игрок";
+        console.log("ID получен:", playerTgId);
     }
-} else {
-    alert("Telegram WebApp НЕ НАЙДЕН (игра открыта в браузере)");
 }
 
 // --- 3. КАРТИНКИ ---
@@ -63,9 +57,6 @@ const ACCEL = 0.012, DECEL = 0.011, MAX_LIFT = 0.22, GRAV = 0.05, DAMP = 0.96, C
 
 // --- 5. БАЗА ДАННЫХ ---
 async function loadPlayer() {
-    // ВРЕМЕННАЯ ПРОВЕРКА: Показывает ID при запуске
-    alert("Твой ID: " + playerTgId); 
-    
     if (firebaseReady && playerTgId !== "offline_user") {
         try {
             const snapshot = await db.ref('players/' + playerTgId).once('value');
@@ -176,10 +167,8 @@ function drawTabs() {
     ctx.fillStyle = '#fff'; ctx.font = "bold 18px 'Courier New', Courier, monospace";
     if (currentTab === 'garage') { 
         ctx.fillText("🏠 ГАРАЖ И ТЮНИНГ", 20, 160); 
-        // Тут твой код гаража
     } else if (currentTab === 'cases') { 
         ctx.fillText("📦 СЕЗОННЫЕ КЕЙСЫ", 20, 160); 
-        // Тут твой код кейсов
     } else if (currentTab === 'trade') { 
         ctx.fillText("🤝 ТРЕЙДЫ И ОБМЕН", 20, 160); 
     } else if (currentTab === 'top') { 
