@@ -89,13 +89,15 @@ async function loadPlayer() {
 }
 
 function savePlayer() {
+    // Сохраняем в память телефона
     localStorage.setItem('stunt_coins', Math.floor(coins));
     localStorage.setItem('stunt_best', Math.floor(bestScore));
     
     if (firebaseReady && playerTgId !== "offline_user") {
         db.ref('players/' + playerTgId).update({
             coins: Math.floor(coins),
-            best_score: Math.floor(bestScore)
+            best_score: Math.floor(bestScore),
+            last_distance: Math.floor(score) // <--- ДОБАВЛЯЕМ ДИСТАНЦИЮ
         }).catch(e => console.warn("Не удалось сохранить в Firebase:", e));
     }
 }
@@ -426,7 +428,7 @@ function loop(t) {
             if (angle > 10) {
                 let speedFactor = (angle - 10) / 50 + 0.01; 
                                 // Уменьшаем скорость начисления в 5 раз (было просто * dt, стало / 5)
-                score += (speedFactor / 5) * dt;  
+                score += (speedFactor / 3) * dt;  
                 let progress = (angle - 10) / (CRASH - 10); 
                 let rewardPerSecond = 50 + (150 * progress); 
                 coins += (rewardPerSecond / 60) * dt;
