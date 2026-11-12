@@ -23,18 +23,22 @@ try {
 // --- 2. TELEGRAM ---
 let playerTgId = "offline_user";
 let playerUsername = "Гонщик";
+
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.ready();
     tg.expand();
     if (tg.requestFullscreen) tg.requestFullscreen();
+    
+    // ВЫВОДИМ ВСЁ, ЧТО ПРИХОДИТ ОТ ТЕЛЕГРАМА
+    alert("initData: " + tg.initData + "\n\nUser: " + JSON.stringify(tg.initDataUnsafe?.user));
+    
     if (tg.initDataUnsafe?.user) {
         playerTgId = tg.initDataUnsafe.user.id.toString();
         playerUsername = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name || "Игрок";
-        console.log("ID получен:", playerTgId);
-    } else {
-        console.warn("Telegram не передал ID (возможно, запущено в браузере).");
     }
+} else {
+    alert("Telegram WebApp НЕ НАЙДЕН (игра открыта в браузере)");
 }
 
 // --- 3. КАРТИНКИ ---
