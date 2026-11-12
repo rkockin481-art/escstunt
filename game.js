@@ -59,6 +59,9 @@ const ACCEL = 0.012, DECEL = 0.011, MAX_LIFT = 0.22, GRAV = 0.05, DAMP = 0.96, C
 
 // --- 5. БАЗА ДАННЫХ ---
 async function loadPlayer() {
+    // ВРЕМЕННАЯ ПРОВЕРКА: Показывает ID при запуске
+    alert("Твой ID: " + playerTgId); 
+    
     if (firebaseReady && playerTgId !== "offline_user") {
         try {
             const snapshot = await db.ref('players/' + playerTgId).once('value');
