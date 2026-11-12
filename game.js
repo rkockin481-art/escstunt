@@ -107,9 +107,9 @@ function savePlayer() {
 }
 
 async function loadTop() {
-    if (!firebaseReady) {
-        topPlayers = [];
-        return;
+    if (!firebaseReady) { 
+        topPlayers = []; 
+        return; 
     }
     try {
         const snapshot = await db.ref('players').orderByChild('best_score').limitToLast(10).once('value');
