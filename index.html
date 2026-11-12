@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stunt Bike drop</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0b0b0b; color: #ffffff; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #game-container { position: relative; width: 100vw; max-width: 420px; height: 100vh; background-color: #cbd5e1; overflow: hidden; display: flex; flex-direction: column; }
+        
+        canvas { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: calc(100vh - 90px); 
+            display: block; 
+            z-index: 1; 
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* ОПУСТИЛИ ВЕРХНЮЮ ПАНЕЛЬ ЕЩЕ НИЖЕ (было 60px, стало 90px) */
+        .top-bar { position: absolute; top: 100px; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 10; pointer-events: none; }
+        .capsule-ui { background-color: #1a1a1a; border: 1px solid #262626; padding: 8px 22px; border-radius: 20px; font-size: 14px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
+        .balance-capsule { width: 120px; height: 38px; background-color: #1a1a1a; border: 1px solid #262626; border-radius: 20px; position: relative; overflow: hidden; display: flex; align-items: center; }
+        .capsule-pointer { position: absolute; left: 10px; width: 3px; height: 18px; background-color: #ef4444; border-radius: 2px; }
+        
+        .bottom-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 90px; background-color: #0b0b0b; display: flex; justify-content: center; align-items: center; padding: 0 16px; z-index: 10; }
+        #bottom-nav { width: 100%; height: 54px; background-color: #151515; border-radius: 27px; display: flex; align-items: center; padding: 4px; }
+        .nav-item { height: 100%; flex: 1; display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: 700; color: #777777; cursor: pointer; border-radius: 23px; }
+        .nav-item.active { background-color: #262626; color: #ffffff; }
+        
+        #game-over-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: calc(100vh - 90px); background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body>
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+    <div class="top-bar">
+        <div class="capsule-ui" style="flex-direction: row; align-items: center; padding: 6px 16px;">
+            <span style="font-size: 14px; color: #ffffff; font-weight: bold;">Баланс: <span id="ui-money-balance">0</span> ₽</span>
+        </div>
+        <div class="balance-capsule" id="ui-balance-bar"><div class="capsule-pointer" id="ui-energy"></div></div>
+    </div>
+
+    <!-- ДИСТАНЦИЯ (Опустили ниже: было 150px, стало 170px) -->
+    <div id="ui-center-score" style="position: absolute; top: 150px; left: 0; width: 100%; text-align: center; font-size: 56px; font-weight: 900; color: #ffffff; text-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.5); z-index: 10; pointer-events: none; font-family: 'Courier New', Courier, monospace;">
+        0<span style="font-size: 28px; font-weight: normal; color: #e2e8f0; margin-left: 4px;">м</span>
+    </div>
+
+    <!-- НИЖНЯЯ ПАНЕЛЬ -->
+    <div class="bottom-bar-container">
+        <div id="bottom-nav">
+            <div class="nav-item">Гараж</div>
+            <div class="nav-item">Кейсы</div>
+            <div class="nav-item active">Игра</div>
+            <div class="nav-item">Трейд</div>
+            <div class="nav-item">Топ</div>
+        </div>
+    </div>
+
+    <!-- ЭКРАН КРАША -->
+    <div id="game-over-screen">
+        <div style="background:#1a1a1a; padding:30px; border-radius:24px; text-align:center; border: 1px solid #ef4444;">
+            <h1 style="color:#ef4444; margin-bottom:12px; font-size:24px;">КРАШ! 💥</h1>
+            <p style="margin-bottom:20px; color:#aaa; font-size:14px;">Результат заезда: <span id="final-score" style="color:#fff; font-weight:bold;">0</span>м</p>
+            <button id="restart-btn" style="height:42px; padding:0 28px; background:#fff; color:#000; border:none; border-radius:21px; font-weight:bold; cursor:pointer;">ПОВТОР</button>
+        </div>
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

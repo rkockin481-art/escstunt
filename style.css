@@ -1,0 +1,120 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body {
+    background-color: #040408;
+    font-family: 'Courier New', Courier, monospace;
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    max-width: 420px;
+    height: 100vh;
+    background-color: #06060f;
+    overflow: hidden;
+    border: 3px solid #1f2937;
+    display: flex;
+    flex-direction: column;
+}
+
+canvas {
+    width: 100%;
+    flex-grow: 1;
+    display: block;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#bottom-nav {
+    height: 75px;
+    background-color: #030712;
+    border-top: 2px solid #1f2937;
+    display: flex;
+    z-index: 10;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    color: #4b5563;
+    cursor: pointer;
+    border-right: 1px solid #111827;
+}
+
+.nav-item.active {
+    color: #16a34a;
+    background: rgba(22, 163, 74, 0.03);
+    font-weight: bold;
+}
+
+#game-over-screen {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 75px);
+    background-color: rgba(3, 7, 18, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(3px);
+}
+
+.pixel-box {
+    background-color: #111827;
+    border: 3px solid #ef4444;
+    padding: 25px;
+    text-align: center;
+    border-radius: 6px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+}
+
+.pixel-box h1 {
+    color: #ef4444;
+    font-size: 26px;
+    margin-bottom: 12px;
+}
+
+.pixel-box p {
+    font-size: 16px;
+    color: #d1d5db;
+    margin-bottom: 20px;
+}
+
+#restart-btn {
+    padding: 10px 24px;
+    background: linear-gradient(to bottom, #16a34a, #15803d);
+    color: #fff;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 4px 0 #166534;
+}
+
+#restart-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #166534;
+}
